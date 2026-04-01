@@ -2,7 +2,7 @@
 
 Make a simple table of contents for your massive figma files. 🦦 
 
---
+---
 
 **About**
 
@@ -12,7 +12,7 @@ Built for designers who live in massive files, it reduces scrolling fatigue and 
 
 This plugin also works in FigJam!  
 
---
+---
 
 **How it works:**
 
@@ -22,7 +22,7 @@ This plugin also works in FigJam!
 - Click any item in the list. The plugin will instantly zoom your viewport to that exact frame/section.
 - Added new tags? Just click the 'Refresh Plugin' button at the bottom to update your Table of Contents.
 
---
+---
 
 **Import to Figma**
 

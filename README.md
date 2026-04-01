@@ -1,6 +1,6 @@
-TOC Otter 🦦
+**TOC Otter 🦦**
 
-Make a simple table of contents for your massive figma files. 🦦
+Make a simple table of contents for your massive figma files. 🦦  
 
 **About**
 
@@ -8,7 +8,7 @@ TOC Otter 🦦 is a clean, minimalist navigation tool that turns your Figma head
 
 Built for designers who live in massive files, it reduces scrolling fatigue and helps you locate your frames and sections with speed and efficiency!
 
-This plugin also works in FigJam!
+This plugin also works in FigJam!  
 
 **How it works:**
 
@@ -16,4 +16,10 @@ This plugin also works in FigJam!
 - Make sure to include a **space** after the # symbol!
 - Run the TOC Otter plugin. It will automatically scan your current page and generate a tidy list of all your tagged frames/sections.
 - Click any item in the list. The plugin will instantly zoom your viewport to that exact frame/section.
-- Added new tags? Just click the 'Refresh Plugin' button at the bottom to update your Table of Contents.
+- Added new tags? Just click the 'Refresh Plugin' button at the bottom to update your Table of Contents.  
+
+**Import to Figma**
+
+- Open the Figma Desktop App.
+- Go to Plugins > Development > Import plugin from manifest...
+- Select the manifest.json file inside this folder.

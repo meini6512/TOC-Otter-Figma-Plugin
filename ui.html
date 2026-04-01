@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Charter', 'Helvetica Neue', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #FFFFFF;
+      color: #37352F;
+      overflow: hidden;
+      -webkit-font-smoothing: auto;
+    }
+    
+    #app {
+      width: 320px;
+      height: 500px;
+      display: flex;
+      flex-direction: column;
+      background: #FBFAFA;
+      position: relative;
+    }
+    
+    /* Remove blue focus outlines */
+    input:focus,
+    button:focus {
+      outline: none;
+      border-color: #C0C0C0;
+    }
+    
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: #E0E0E0;
+      border-radius: 4px;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+      background: #D0D0D0;
+    }
+    
+    /* Header */
+    .header {
+      padding: 20px 16px 16px 16px;
+      border-bottom: 1px solid #EFEFED;
+      background: #FFFFFF;
+      flex-shrink: 0;
+    }
+    
+    .title-row {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    
+    .otter-emoji {
+      font-size: 56px;
+      line-height: 1;
+      display: block;
+    }
+    
+    .title {
+      font-size: 24px;
+      font-weight: 600;
+      color: #37352F;
+      letter-spacing: -0.02em;
+    }
+    
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    
+    .help-button {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #E0E0E0;
+      border-radius: 4px;
+      background: #FFFFFF;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: background-color 0.1s ease;
+    }
+    
+    .help-button:hover {
+      background: #FBFAFA;
+    }
+    
+    .help-icon {
+      width: 16px;
+      height: 16px;
+      color: #9B9A97;
+    }
+    
+    /* Search */
+    .search-container {
+      position: relative;
+      flex: 1;
+    }
+    
+    .search-icon {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 14px;
+      height: 14px;
+      color: #9B9A97;
+    }
+    
+    .search-input {
+      width: 100%;
+      padding: 8px 12px 8px 32px;
+      font-family: 'Charter', Monaco, Consolas, monospace;
+      font-size: 13px;
+      border: 1px solid #E0E0E0;
+      border-radius: 4px;
+      background: #FFFFFF;
+      color: #37352F;
+      transition: border-color 0.2s ease;
+    }
+    
+    /* Instructions Sidebar */
+    .instructions-sidebar {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 280px;
+      height: 100%;
+      background: #FFFFFF;
+      border-left: 1px solid #EFEFED;
+      transform: translateX(100%);
+      transition: transform 0.3s ease;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .instructions-sidebar.open {
+      transform: translateX(0);
+    }
+    
+    .instructions-header {
+      padding: 16px;
+      border-bottom: 1px solid #EFEFED;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+    
+    .instructions-title {
+      font-size: 14px;
+      font-weight: 500;
+      color: #37352F;
+    }
+    
+    .close-button {
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: background-color 0.1s ease;
+    }
+    
+    .close-button:hover {
+      background: #EFEFED;
+    }
+    
+    .close-icon {
+      width: 16px;
+      height: 16px;
+      color: #9B9A97;
+    }
+    
+    .instructions-content {
+      padding: 16px;
+      overflow-y: auto;
+      flex: 1;
+    }
+    
+    .instructions-section {
+      margin-bottom: 20px;
+    }
+    
+    .instructions-section:last-child {
+      margin-bottom: 0;
+    }
+    
+    .instructions-heading {
+      font-size: 13px;
+      font-weight: 500;
+      color: #37352F;
+      margin-bottom: 8px;
+    }
+    
+    .instructions-text {
+      font-size: 13px;
+      color: #9B9A97;
+      line-height: 1.6;
+      margin-bottom: 8px;
+    }
+    
+    .instructions-code {
+      background: #FBFAFA;
+      padding: 8px 12px;
+      border-radius: 4px;
+      font-family: 'Charter', Monaco, Consolas, monospace;
+      font-size: 12px;
+      color: #37352F;
+      border: 1px solid #EFEFED;
+      display: inline-block;
+      margin: 4px 0;
+    }
+    
+    .instructions-list {
+      list-style: none;
+      margin: 8px 0;
+    }
+    
+    .instructions-list li {
+      font-size: 13px;
+      color: #9B9A97;
+      line-height: 1.6;
+      padding-left: 20px;
+      position: relative;
+      margin-bottom: 6px;
+    }
+    
+    .instructions-list li:before {
+      content: "-";
+      position: absolute;
+      left: 0;
+      font-size: 12px;
+    }
+    
+    /* TOC List */
+    .toc-list {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      background: #FFFFFF;
+    }
+    
+    .toc-item {
+      padding: 10px 16px;
+      cursor: pointer;
+      border-bottom: 1px solid #F7F6F5;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: background-color 0.1s ease;
+    }
+    
+    .toc-item:hover {
+      background-color: #f5f1eb;
+    }
+    
+    .toc-item-content {
+      flex: 1;
+      min-width: 0;
+    }
+    
+    .toc-item-name {
+      font-size: 13px;
+      color: #37352F;
+      font-weight: 400;
+      margin-bottom: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    
+    .toc-item-type {
+      font-size: 11px;
+      color: #9B9A97;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .chevron {
+      width: 14px;
+      height: 14px;
+      color: #C0BFBC;
+      flex-shrink: 0;
+      margin-left: 8px;
+    }
+    
+    /* Empty State */
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      padding: 32px;
+      text-align: center;
+    }
+    
+    .empty-emoji {
+      font-size: 64px;
+      margin-bottom: 16px;
+      opacity: 0.5;
+    }
+    
+    .empty-text {
+      color: #9B9A97;
+      font-size: 13px;
+      line-height: 1.5;
+      max-width: 240px;
+    }
+    
+    /* Footer */
+    .footer {
+      padding: 12px 16px;
+      border-top: 1px solid #EFEFED;
+      background: #FFFFFF;
+      flex-shrink: 0;
+    }
+    
+    .refresh-button {
+      width: 100%;
+      padding: 8px 12px;
+      font-family: 'Charter', Monaco, Consolas, monospace;
+      font-size: 13px;
+      color: #37352F;
+      background: transparent;
+      border: 1px solid #E0E0E0;
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-weight: 400;
+      transition: background-color 0.1s ease;
+    }
+    
+    .refresh-button:hover {
+      background: #FBFAFA;
+    }
+    
+    .refresh-icon {
+      width: 12px;
+      height: 12px;
+    }
+    
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    
+    .spin {
+      animation: spin 1s linear infinite;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <!-- Header -->
+    <div class="header">
+      <div class="title-row">
+        <span class="otter-emoji">🦦</span>
+        <h1 class="title">TOC Otter</h1>
+      </div>
+      
+      <div class="header-actions">
+        <button class="help-button" id="helpButton" title="Instructions">
+          <svg class="help-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="11"></circle>
+            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 4.5"></path>
+            <line x1="13" y1="17" x2="12" y2="17"></line>
+          </svg>
+        </button>
+        
+        <!-- Search Input -->
+        <div class="search-container">
+          <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+          <input
+            type="text"
+            class="search-input"
+            placeholder="Quick search..."
+            id="searchInput"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- TOC List -->
+    <div class="toc-list" id="tocList">
+      <div class="empty-state">
+        <div class="empty-emoji">🦦</div>
+        <p class="empty-text">Loading...</p>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <button class="refresh-button" id="refreshButton">
+        <svg class="refresh-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path d="M21 2v6h-6M3 12a9 9 0 0 1 15-6.7L21 8M3 22v-6h6M21 12a9 9 0 0 1-15 6.7L3 16"></path>
+        </svg>
+        <span>Refresh Plugin</span>
+      </button>
+    </div>
+    
+    <!-- Instructions Sidebar -->
+    <div class="instructions-sidebar" id="instructionsSidebar">
+      <div class="instructions-header">
+        <span class="instructions-title"><strong>How to Use This Plugin?</strong></span>
+        <button class="close-button" id="closeButton">
+          <svg class="close-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      
+      <br>
+
+      <div class="instructions-content">
+        <div class="instructions-section">
+          <h3 class="instructions-heading"> 📣 Quick Start</h3>
+          <p class="instructions-text">
+            TOC Otter automatically scans your Figma page for frames and sections to create a navigable table of contents.
+          </p>
+        </div>
+
+        <br>
+        
+        <div class="instructions-section">
+          <h3 class="instructions-heading">🏷️ Tagging Frames</h3>
+          <p class="instructions-text">
+            To include a frame or section in the TOC, add the prefix <strong>#</strong> to its name:
+          </p>
+          <br>
+          <ul class="instructions-list">
+            <li>For example: <strong># Header Section</strong></li>
+          </ul>
+        </div>
+
+        <br>
+        
+        <div class="instructions-section">
+          <h3 class="instructions-heading">⚠️ Important</h3>
+          <p class="instructions-text">
+            Make sure to include a <strong>space after the # symbol.</strong>
+          </p>
+          <p class="instructions-text" style="margin-top: 8px;">
+            <br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;✅ <span class="instructions-code"># Hero Section</span><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;❌ <span class="instructions-code">#Hero Section</span>
+          </p>
+        </div>
+
+        <br>
+        
+        <div class="instructions-section">
+          <h3 class="instructions-heading">🤎 Navigation Tips</h3>
+          <ul class="instructions-list">
+            <li>Click any item to jump to that frame</li>
+            <li>Use search to quickly filter items</li>
+            <li>Click Refresh to rescan the page</li>
+          </ul>
+        </div>
+        <br>
+        <br>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let allItems = [];
+    let filteredItems = [];
+    let isLoading = false;
+
+    const searchInput = document.getElementById('searchInput');
+    const tocList = document.getElementById('tocList');
+    const refreshButton = document.getElementById('refreshButton');
+    const helpButton = document.getElementById('helpButton');
+    const closeButton = document.getElementById('closeButton');
+    const instructionsSidebar = document.getElementById('instructionsSidebar');
+
+    // Help button handler
+    helpButton.addEventListener('click', () => {
+      instructionsSidebar.classList.add('open');
+    });
+
+    // Close button handler
+    closeButton.addEventListener('click', () => {
+      instructionsSidebar.classList.remove('open');
+    });
+
+    // Listen for messages from the plugin backend
+    window.onmessage = (event) => {
+      const msg = event.data.pluginMessage;
+      
+      if (msg.type === 'toc-items') {
+        allItems = msg.items;
+        filterAndRender();
+      } else if (msg.type === 'focus-success') {
+        console.log('Focused on:', msg.nodeName);
+      } else if (msg.type === 'focus-error') {
+        console.error('Focus error:', msg.message);
+      }
+    };
+
+    // Search input handler
+    searchInput.addEventListener('input', (e) => {
+      filterAndRender();
+    });
+
+    // Refresh button handler
+    refreshButton.addEventListener('click', () => {
+      if (isLoading) return;
+      
+      isLoading = true;
+      const icon = refreshButton.querySelector('.refresh-icon');
+      icon.classList.add('spin');
+      
+      parent.postMessage({ 
+        pluginMessage: { type: 'scan-toc', tagPrefix: '# ' } 
+      }, '*');
+      
+      setTimeout(() => {
+        isLoading = false;
+        icon.classList.remove('spin');
+      }, 500);
+    });
+
+    // Filter and render TOC items
+    function filterAndRender() {
+      const query = searchInput.value.toLowerCase();
+      
+      if (query) {
+        filteredItems = allItems.filter(item =>
+          item.name.toLowerCase().includes(query)
+        );
+      } else {
+        filteredItems = allItems;
+      }
+      
+      render();
+    }
+
+    // Render TOC list
+    function render() {
+      if (filteredItems.length === 0) {
+        const query = searchInput.value;
+        tocList.innerHTML = `
+          <div class="empty-state">
+            <p class="empty-text">
+              ${query ? 'No matching frames found.' : "The Otter is searching...<br>Tag a frame with '# ' to begin."}
+            </p>
+          </div>
+        `;
+        return;
+      }
+
+      let html = '';
+      filteredItems.forEach((item, index) => {
+        html += `
+          <div class="toc-item" data-id="${item.id}">
+            <div class="toc-item-content">
+              <div class="toc-item-name">${escapeHtml(item.name)}</div>
+              <div class="toc-item-type">${item.type}</div>
+            </div>
+            <svg class="chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </div>
+        `;
+      });
+
+      tocList.innerHTML = html;
+
+      // Add click handlers
+      document.querySelectorAll('.toc-item').forEach(el => {
+        el.addEventListener('click', () => {
+          const nodeId = el.getAttribute('data-id');
+          parent.postMessage({ 
+            pluginMessage: { type: 'focus-node', nodeId } 
+          }, '*');
+        });
+      });
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // Initial request
+    parent.postMessage({ 
+      pluginMessage: { type: 'scan-toc', tagPrefix: '# ' } 
+    }, '*');
+  </script>
+</body>
+</html>

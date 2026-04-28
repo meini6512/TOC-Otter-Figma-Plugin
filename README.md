@@ -1,6 +1,7 @@
 **TOC Otter 🦦**
 
 Make a simple table of contents for your massive figma files. 🦦 
+Plugin link: https://www.figma.com/community/plugin/1621211171721810688/toc-otter
 
 ---
 
